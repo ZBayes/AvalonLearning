@@ -1,0 +1,19 @@
+</!DOCTYPE html>
+<html>
+<head>
+    <title>第一个avalon项目</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script scr="vendor/require/require.js" data-main="main.js"></script>
+    <style>
+        .ms-controller{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body ms-controller="root" class="ms-controller">
+    <div>{{header | html}}</div>
+    <div ms-include-src="page"></div>
+    <div>{{footer}}</div>
+</body>
+</html>

@@ -13,5 +13,19 @@
 适配性和兼容性都很好，移动端适配有avalon.modern.js
 
 ## 2 avalon部署
-最简单的引用案例：**2_1_easyLoad**
+## 2.1 avalon 通用部署
+### 2.1.1 简单的引用案例
+简单的引用案例：  
+PC端案例：  
+![PC案例](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/imooc_note/imooc_pic/PC_loadTest.png)
+移动端案例：  
+![移动端案例](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/imooc_note/imooc_pic/Mobile_loadTest.png)
 
+### 2.1.1 禁用Avalon自带的加载器
+1. Config方法：
+![Config禁用加载器](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/imooc_note/imooc_pic/ban_load_config.png)
+2. 修改源代码：
+![修改源代码禁用加载器](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/imooc_note/imooc_pic/ban_load_modifySourceCode.png)
+3. 删除AMD加载器：
+![删除AMD加载器](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/imooc_note/imooc_pic/ban_load_AMD.png)
+4. 
