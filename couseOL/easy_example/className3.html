@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                color: "red",
+                toggle: true,
+    
+                switchColor: function() {
+                    vm.color = vm.color === "red" ? "blue" : "red"
+                }
+            })
+        </script>
+        <style>
+            .ms-class-test{
+                background:green;
+                width:300px;
+                height:100px;
+            }
+            .c-red{
+                background: red;
+            }
+            .c-blue{
+                background: blue;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <div class="ms-class-test" ms-hover="[@toggle ? 'c-'+@color: '']"> </div>
+        <button ms-click="@switchColor"> 点我改变类名</button>
+        <button ms-click="@toggle = !@toggle"> 点我改变toggle</button>
+    </body>
+</html>

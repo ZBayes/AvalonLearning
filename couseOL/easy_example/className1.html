@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>新风格</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: "ms-class",
+                toggle: true,
+                aaa: 'xxx',
+                bbb: 'yyy',
+                ccc: 'zzz'
+            })
+        </script>
+        <style>
+            .test{
+                width:100px;
+                height:100px;
+                border:1px solid red;
+                color:red;
+                -webkit-user-select: none;  /* Chrome all / Safari all */
+                -moz-user-select: none;     /* Firefox all */
+                -ms-user-select: none;      /* IE 10+ */
+                -o-user-select: none;
+                user-select: none;          
+            }
+            .aaa{
+                color:blue;
+                border:1px solid blue;
+            }
+        </style>
+    </head>
+    <body ms-controller="ms-class">
+        <div class="test" ms-class="{aaa:@toggle}" ms-click="@toggle = !@toggle">点我</div>
+        <div  ms-class="'aaa bbb ccc'"> 它的名类是aaa bbb ccc   </div>
+        <div  ms-class="[@aaa,@bbb,@ccc]" >  它的名类是xxx yyy zzz   </div>
+        <div  ms-class="[@aaa, @toggle ? @bbb: @ccc]">  它的名类是{{aaa}} yyy  </div>
+     
+
+    </body>
+</html>

@@ -232,6 +232,7 @@ controller可以统治内部的所有参数，而important能屏蔽外部的参�
 
 ## avalon2学习教程03数据填充
 > 司徒正美 2016年04月07日发布
+
 网址：[avalon2学习教程03数据填充](https://segmentfault.com/a/1190000004883743)
 
 在avalon2中提供了三种数据填充的方法。（fill.html）
@@ -452,3 +453,367 @@ avalon.config({
     </body>
 </html>
 ```
+
+
+## avalon2学习教程05属性操作
+> 司徒正美 2016年04月07日发布
+
+网址：[avalon2学习教程05属性操作](https://segmentfault.com/a/1190000004886685)
+
+相比avalon1，avalon2从减轻用户记忆的角度出发，简化了属性和对象。
+
+```HTML
+<div ms-attr="{aaa:@a, bbb:@b+11, ccc: @fn(@d,@e)}"></div>
+
+<div ms-attr="@attrObj"></div>
+
+<div ms-attr="[{@aaa:@a}, {bbb: @b}, @toggle ? {add:"111"}: {}]"></div>
+```
+
+下面是一个完整的例子：（objectTest.html）
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script >
+            var vm = avalon.define({
+                $id: "test",
+                title:111,
+                src: "222",
+                lang: 333
+            })
+
+        </script>
+    </head>
+    <body ms-controller="test" >
+          <div  aaa='ddd' bbb=333 
+                ms-attr='{title: @title,
+                    ddd:@src, 
+                    lang:@lang}' >{{
+                   @src ? 333: 'empty'
+              }}</div>
+          <input ms-duplex="@src"/>
+    </body>
+</html>
+```
+
+可以发现里面ms-attr里面可以存储一个长而且复杂的对象，但是作者建议为了性能着想还是尽可能让ms-attr保持一行。
+
+## avalon2学习教程06样式操作
+> 司徒正美 2016年04月07日发布
+
+网址：[avalon2学习教程06样式操作](https://segmentfault.com/a/1190000004887727)
+
+和ms-attr类似，ms-css将多个操作集成到一个对象处理，因此只有类似ms-css="Object"或ms-css="Array"的形式。
+
+> 注意，当你用对象字面量的方式传参时，注意存在－号的键名要用“”号括起来。
+
+下面两种形式才是正确的
+```HTML
+<div ms-css="{fontSize: @fs}"></div>
+
+<div ms-css="{'font-size': @fs}"></div>
+```
+
+avalon2里面不允许加入太多的插值表达式，只支持加上厂商前缀，驼峰化，对数字属性加上px。
+```HTML
+<div ms-css="[{width:@width, height: @height+'px', color: @color, backgroundColor:@bg}, @otherStyleObject, @thirdStyleObject]"></div>
+```
+
+下面是一个例子：（CSSOperate1.html）
+```HTML
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                background: "red"
+            })
+        </script>
+    </head>
+    <body>
+        <div ms-controller="test">
+            <div style="width:200px; height:50px" 
+                 ms-css="{background: @background}">
+            </div>
+            <select ms-duplex="@background">
+                <option value="red">红</option>
+                <option value="yellow">黄</option>
+                <option value="green">绿</option>
+            </select>
+        </div>
+    </body>
+</html>
+```
+
+在这里面，会随着object的选择会改变background的值，从而改变上面的div的值。
+
+（CSSOperate2.html）
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                percent: 0
+            })
+            var a = true
+            var id = setInterval(function() {
+                if (a) {
+                    if (vm.percent < 100) {
+                        vm.percent++
+                    } else {
+                        a = false
+                    }
+                } else {
+                    if (vm.percent > 0) {
+                        vm.percent--
+                    } else {
+                        a = true
+                    }
+                }
+            }, 100)
+        </script>
+        <style>
+            .handerx{
+                width:20px;
+                height:20px;
+                position: absolute;
+                color:#fff;
+                background: #000;
+            }
+            .sliderx{
+                width:100%;
+                height:20px;
+                position: relative;
+            }
+            .body{
+                padding:40px;
+            }
+        </style>
+    </head>
+    <body ms-controller="test" class="body">
+        <div class="slider" style="background:red;">
+            <div class="handerx" ms-css="{left: @percent+'%'}" >{{ @percent }}</div>
+            <div style="background: greenyellow;height:20px" ms-css="{width:@percent+'%'}"></div>
+        </div>
+        <div class="sliderx" style="background:#d2d2d2;">
+            <div style="background: #2FECDC;height:20px" ms-css="{width:100-@percent+'%'}"></div>
+        </div>
+    </body>
+</html>
+```
+
+这里面使用了一个计时器，这个计时器随着时间变化下面的进度条会变化，从代码看来，上面一条进度条是以红色为底色，然后上面还有一层，是绿色，长度会随着时间变化而变化，然后就能够简单粗暴地实现进度条形式，下面的类似，就是少了一个进度值。
+
+（CSSOperate3.html）
+```HTML
+<html>
+    <head>
+        <title>ms-css</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                w: 100,
+                h: 100,
+                click: function () {
+                    vm.w = vm.w + 10;
+                    vm.h = vm.h + 10;
+                }
+            })
+
+        </script>
+    </head>
+    <body>
+        <div ms-controller="test">
+            <div style=" background: #a9ea00;" ms-css='{width:@w,height:@h}' ms-click="@click"></div>
+            <p>{{ @w }} x {{ @h }}</p>
+            <!--change过滤器相当于原来data-duplex-event='change'-->
+            <p>W: <input type="text" ms-duplex-number="@w|change" /></p>
+            <p>H: <input type="text" ms-duplex-number="@h" /></p>
+        </div>
+    </body>
+</html>
+```
+
+上面的例子是与ms-duplex结合使用的例子。click是一个事件，点击按钮的时候会改变属性值。但是发现两者存在少许区别，W的变化时需要在点击鼠标的时候才会改变事件，而H则是随着框里面的变化而变化。
+
+## avalon2学习教程07类名处理
+>司徒正美 2016年04月08日发布
+
+网址：[avalon2学习教程07类名处理](https://segmentfault.com/a/1190000004894518)
+
+avalon2的类名操作涉及到ms-class,ms-active,ms-hover。由于用法类似，所以就只以其中一个为例。
+
+>ms-class可以对应vm中的一个字符串属性，里面可以有空格（一个空格就是一个类名嘛）
+
+```HTML
+vm.classes = "aaa bbb ccc"
+<div ms-class="@classes"></div>
+
+<div ms-class="[@aaa, @bbb, {xxx:false, yyy: true, zzz: @toggle}, '222']"></div>
+```
+
+我选择看一个例子：(className1.html)
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>新风格</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: "ms-class",
+                toggle: true,
+                aaa: 'xxx',
+                bbb: 'yyy',
+                ccc: 'zzz'
+            })
+        </script>
+        <style>
+            .test{
+                width:100px;
+                height:100px;
+                border:1px solid red;
+                color:red;
+                -webkit-user-select: none;  /* Chrome all / Safari all */
+                -moz-user-select: none;     /* Firefox all */
+                -ms-user-select: none;      /* IE 10+ */
+                -o-user-select: none;
+                user-select: none;          
+            }
+            .aaa{
+                color:blue;
+                border:1px solid blue;
+            }
+        </style>
+    </head>
+    <body ms-controller="ms-class">
+        <div class="test" ms-class="{aaa:@toggle}" ms-click="@toggle = !@toggle">点我</div>
+        <div  ms-class="'aaa bbb ccc'"> 它的名类是aaa bbb ccc   </div>
+        <div  ms-class="[@aaa,@bbb,@ccc]" >  它的名类是xxx yyy zzz   </div>
+        <div  ms-class="[@aaa, @toggle ? @bbb: @ccc]">  它的名类是xxx yyy  </div>
+     
+
+    </body>
+</html>
+```
+
+从这个例子可以看出，类能通过ms-class传入，而且能和传统的class一同使用。另外还需要注意的是代码。
+
+（className2.html)
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ms-class</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js"></script>
+        <style>
+            .ms-class div{
+                display:inline-block;
+                width:200px;
+                height:100px;
+                border: 1px solid  black;
+            }
+            .active{
+                background: black;
+                color: white;
+            }
+            .bgRed {
+                background:palegoldenrod;
+            }
+            .hover{
+                background: red;
+                color: white;
+            }
+        </style>
+        <script type="text/javascript">
+            var vm = avalon.define({
+                $id: "test",
+                w: 500,
+                h: 200,
+                num: "00",
+                className: "点我",
+                changeClassName: function(e) {
+                    vm.num = (100 * Math.random()).toFixed(0);
+                    vm.className = e.target.className
+                }
+            })
+        </script>
+    </head>
+    <body ms-controller="test" class="ms-class">
+        <div ms-active="'active'" >测试:active</div>
+        <div ms-hover="'hover'" >测试:hover</div>
+        <div ms-class="['bgRed', 'width'+@w, 'height'+@h]" ms-css="{width: @h}">
+            类名通过插值表达式生成<br/>
+            {{@w}} * {{@h}}<br/>
+            <input  ms-duplex="@h | change">
+        </div>
+        <p><button type="button" ms-class="'test'+@num" ms-click="@changeClassName">{{@className}}</button></p>
+    </body>
+</html>
+```
+
+在这里就能看到active，hover和class的区别，前两者是在触发某个事件的时候能出现，设置该形式的样式，十分方便。
+
+（className3.html）
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                color: "red",
+                toggle: true,
+    
+                switchColor: function() {
+                    vm.color = vm.color === "red" ? "blue" : "red"
+                }
+            })
+        </script>
+        <style>
+            .ms-class-test{
+                background:green;
+                width:300px;
+                height:100px;
+            }
+            .c-red{
+                background: red;
+            }
+            .c-blue{
+                background: blue;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <div class="ms-class-test" ms-hover="[@toggle ? 'c-'+@color: '']"> </div>
+        <button ms-click="@switchColor"> 点我改变类名</button>
+        <button ms-click="@toggle = !@toggle"> 点我改变toggle</button>
+    </body>
+</html>
+```
+
+通过条件表达式可以控制样式根据条件变化。大概的几层关系我也简单的搞了一下：
+
+![]()
