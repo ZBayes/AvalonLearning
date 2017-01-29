@@ -296,7 +296,8 @@ avalon.config({
 
 ## avalon2学习教程04显示隐藏处理
 > 司徒正美 2016年04月07日发布
-[avalon2学习教程04显示隐藏处理](https://segmentfault.com/a/1190000004885280)
+
+网址：[avalon2学习教程04显示隐藏处理](https://segmentfault.com/a/1190000004885280)
 
 主角是ms-visible。类比display和jQuery的toggle。
 
@@ -405,7 +406,49 @@ avalon.config({
 
 通过这个例子可知avalon能够解决内联样式混乱的问题。
 
-下面这个例子就是一个实例，用于实现一个切换卡。
+下面这个例子就是一个实例，用于实现一个切换卡。（visible2.html）
 ```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script >
+            var vm = avalon.define({
+                $id: "test",
+                curIndex: 0, //默认显示第一个
+                buttons: ['aaa', 'bbb', 'ccc'],
+                panels: ["<div>面板1</div>", "<p>面板2</p>", "<strong>面板3</strong>"]
+            })
 
+        </script>
+        <style>
+            button{
+                margin:1em 3em;
+            }
+            .panel div{
+                height:200px;
+                background: #a9ea00;
+            }
+            .panel p{
+                height:200px;
+                background: green;
+            }
+            .panel strong{
+                display:block;
+                width:100%;
+                height:200px;
+                background: #999;
+            }
+        </style>
+    </head>
+    <body ms-controller="test" >
+        <div>
+            <button ms-for='(i, el) in @buttons' ms-click='@curIndex = i'>{{el}}</button>
+        </div>
+        <div class='panel' ms-for='(jj, el) in @panels' ms-visible='jj === @curIndex' ms-html='el'></div>
+    </body>
+</html>
 ```
