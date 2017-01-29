@@ -10,5 +10,14 @@ Notes on Avalon Learning
 - 删除：慕课网笔记（原因：时间比较久远，内容和实际版本不匹配）
 - 新增：司徒正美老师在简书上的教程的部分笔记，更新至4。
 - 存在问题：未找到avalon.mediatorFactory。
+
 参考文献：
-[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
+教程：[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
+
+2017-1-29
+- 新增：司徒正美老师在简书上的教程的部分笔记，更新至8。
+- 存在问题：可以添加属于自己的API文档和表格。
+
+参考文献：
+教程：[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
+API文档：[avalon2——迷你、易用、高性能的前端MVVM框架](http://avalonjs.coding.me/)
