@@ -1,6 +1,8 @@
 # 司徒正美Avalon教程-From 简书
 暂时没有摘要
 
+[TOC]
+
 ## avalon2学习教程01
 > 司徒正美 2016年04月06日发布
 
@@ -816,4 +818,151 @@ vm.classes = "aaa bbb ccc"
 
 通过条件表达式可以控制样式根据条件变化。大概的几层关系我也简单的搞了一下：
 
-![]()
+![className1.png](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/couseOL/pic/className1.png)
+
+> ms-class、 ms-hover、 ms-active涵盖了所有与类名相应的需求，并且使用上比jQuery还简单。最后看一下用它实现斑马线的效果吧。
+
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ms-class</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script>
+            avalon.define({
+                $id: "test",
+                array: avalon.range(0, 14)
+            })
+        </script>
+        <style>
+            .zebra-table{
+                border-collapse: collapse;
+                width:400px;
+                border:1px solid black;
+            }
+            .zebra-table td{
+                border:1px solid black;
+                text-indent: 1em;
+            }
+            .zebra-table .even td{
+                background:#ddd;
+                color:white;
+            }
+             .zebra-table .hover td{
+                color: red;
+                font-weight: bolder;
+            }
+        </style>
+    </head>
+    <body ms-controller="test" >
+        <table class="zebra-table">
+            <tr ms-for="($index, el ) in @array" ms-hover="'hover'" ms-class="{even: $index % 2 == 0}">
+                <td>{{$index}}</td>
+                <td>{{ new Date - 0 | date("yyyy-MM-dd")}}</td>
+            </tr>
+        </table>
+    </body>
+</html>
+```
+
+这是实现斑马线主要功能的方法，可以做笔记，**注意理解其原理**，里面还用到了ms-for的循环语句。
+
+## avalon2学习教程08插入移除操作
+> 司徒正美 2016年04月08日发布
+
+网址：[avalon2学习教程08插入移除操作](https://segmentfault.com/a/1190000004896630)
+
+> 本节介绍的ms-if指令与ms-visible很相似，都是让某元素“看不见”，不同的是ms-visible是通过CSS实现，ms-if是通过移除插入节点实现。
+
+（ifExist1.html）
+```HTML
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>ms-if</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+            var vmodel = avalon.define({
+                $id: "test",
+                object: {}
+            })
+
+            setTimeout(function() {
+                vmodel.object = {id: "132", message: "显示！！"}
+            }, 3000)
+
+            setTimeout(function() {
+                vmodel.object = {}
+            }, 5000)
+
+        </script>
+    </head>
+    <body>
+        <div ms-controller="test" >
+            这是比较输出结果:{{@object.id != null}}
+            <div ms-visible="@object.id != null">
+                这是visible的:
+                <span>{{@object.message}}</span>
+            </div>
+            <div ms-if="@object.id != null">
+                这是if的:
+                <span>{{@object.message}}</span>
+            </div>
+        </div>
+    </body>
+</html>
+```
+
+查看生成的html可知，ms-if和ms-visible的区别，两者的区别在于该dom节点是否存在。
+
+这是一个新的选项卡的实现（ifExist2.html）
+```HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ms-if</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script >
+            var vm = avalon.define({
+                $id: "test",
+                curIndex: 0, //默认显示第一个
+                buttons: ['aaa', 'bbb', 'ccc'],
+                panels: ["<div>面板1</div>", "<p>面板2</p>", "<strong>面板3</strong>"]
+            })
+
+        </script>
+        <style>
+            button{
+                margin:1em 3em;
+            }
+            .panel div{
+                height:200px;
+                background: #a9ea00;
+            }
+            .panel p{
+                height:200px;
+                background: green;
+            }
+            .panel strong{
+                display:block;
+                width:100%;
+                height:200px;
+                background: #999;
+            }
+        </style>
+    </head>
+    <body ms-controller="test" >
+        <div>
+            <button ms-for='(i, el) in @buttons' ms-click='@curIndex = i'>{{el}}</button>
+        </div>
+        <div class='panel' ms-for='(jj, el) in @panels' ms-if='jj === @curIndex' ms-html='el'></div>
+    </body>
+</html>
+```
+
+ms-for又起到了作用，需要对其使用有足够的熟悉。另一方面是ms-if，这个才是这章的重点额。
