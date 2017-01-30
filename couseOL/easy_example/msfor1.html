@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                array: ["aaa","bbb","ccc"]
+            })
+            setTimeout(function(){
+                 vm.array = ['ccc','dd1','dd2','dd3']
+            },3000)
+           
+
+        </script>
+    </head>
+    <body ms-controller="test">
+        <ul>
+            <li ms-for="($index, el) in @array">{{el}} --- {{$index}}</li>
+        </ul>
+    </body>
+</html>

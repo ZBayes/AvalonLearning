@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                array: [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]
+            })
+            setTimeout(function(){
+                vm.array.set(0, [13,14,15,16])
+            },3000)
+        </script>
+    </head>
+    <body ms-controller="test">
+        <table border="1">
+            <tr ms-for="($index, el) in @array">
+                <td ms-for="elem in el">{{elem}}  它位于第<b style="color:orchid">{{$index}}</b>行</td>
+            </tr>
+        </table>
+    </body>
+</html>
