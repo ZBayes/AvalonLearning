@@ -24,6 +24,8 @@ API文档：[avalon2——迷你、易用、高性能的前端MVVM框架](http:/
 
 2017-1-30
 - 新增：司徒正美老师在简书上的教程的部分笔记，更新至13。
+- 新增：图床
 
 参考文献：
 教程：[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
+
