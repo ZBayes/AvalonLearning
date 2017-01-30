@@ -9,7 +9,7 @@
 网址：[avalon2学习教程01](https://segmentfault.com/a/1190000004882326)
 
 首先是第一个跑成功的avalon案例：(easy_example\first.html)
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -39,7 +39,7 @@
 ```
 
 首先引用是我花的比较多的时间的一个，avalon的git上有很多同名的文件，到最后我在找到那个正确的文件，在dist文件夹下的才是最新最完整的，引用后直接能使用。
-```HTML
+```html
 <script src="avalon.js"></script>
 ```
 
@@ -61,7 +61,7 @@ var vm = avalon.define({
 
 这段主要是设置对应的类不出现，具体原因后面会讲到。
 
-```HTML
+```html
 <div ms-controller="test">
     <input ms-duplex="@a" />
     <p>{{@a}}</p>
@@ -193,7 +193,7 @@ console.log(vm.arr)
 - ms-important, 让此vm的作用域进入此元素内部，并且屏蔽上方的ms-controller或ms-important的vm的影响。
 
 下面是一个例子：（actionScope.html）
-```HTML
+```html
 <!DOCTYPE html>
 
 <html>
@@ -238,7 +238,7 @@ controller可以统治内部的所有参数，而important能屏蔽外部的参�
 网址：[avalon2学习教程03数据填充](https://segmentfault.com/a/1190000004883743)
 
 在avalon2中提供了三种数据填充的方法。（fill.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -279,7 +279,7 @@ ms-html具有一些比较厉害的特性，就是允许里面输入html样式，
 
 第一个方法，添加ms-controller类名，将当前区域先隐藏起来，avalon扫描到这里后会自动隐藏它们的。但是需要注意这样式必须写head的上方，方便它第一时间被应用。
 
-```HTML
+```html
  .ms-controller{
      display:none;
  }
@@ -305,7 +305,7 @@ avalon.config({
 主角是ms-visible。类比display和jQuery的toggle。
 
 第一个例子（visible1.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -374,7 +374,7 @@ avalon.config({
 通过ms-click绑定一个事件是点击按钮可以将变量toggle取反。虽然元素部分不可见，但是某些属性值还是被存起来，用变量的形式。
 
 另一个例子：（visible2.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -410,7 +410,7 @@ avalon.config({
 通过这个例子可知avalon能够解决内联样式混乱的问题。
 
 下面这个例子就是一个实例，用于实现一个切换卡。（visible2.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -464,7 +464,7 @@ avalon.config({
 
 相比avalon1，avalon2从减轻用户记忆的角度出发，简化了属性和对象。
 
-```HTML
+```html
 <div ms-attr="{aaa:@a, bbb:@b+11, ccc: @fn(@d,@e)}"></div>
 
 <div ms-attr="@attrObj"></div>
@@ -473,7 +473,7 @@ avalon.config({
 ```
 
 下面是一个完整的例子：（objectTest.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -515,19 +515,19 @@ avalon.config({
 > 注意，当你用对象字面量的方式传参时，注意存在－号的键名要用“”号括起来。
 
 下面两种形式才是正确的
-```HTML
+```html
 <div ms-css="{fontSize: @fs}"></div>
 
 <div ms-css="{'font-size': @fs}"></div>
 ```
 
 avalon2里面不允许加入太多的插值表达式，只支持加上厂商前缀，驼峰化，对数字属性加上px。
-```HTML
+```html
 <div ms-css="[{width:@width, height: @height+'px', color: @color, backgroundColor:@bg}, @otherStyleObject, @thirdStyleObject]"></div>
 ```
 
 下面是一个例子：（CSSOperate1.html）
-```HTML
+```html
 
 <!DOCTYPE html>
 <html>
@@ -559,7 +559,7 @@ avalon2里面不允许加入太多的插值表达式，只支持加上厂商前�
 在这里面，会随着object的选择会改变background的值，从而改变上面的div的值。
 
 （CSSOperate2.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -620,7 +620,7 @@ avalon2里面不允许加入太多的插值表达式，只支持加上厂商前�
 这里面使用了一个计时器，这个计时器随着时间变化下面的进度条会变化，从代码看来，上面一条进度条是以红色为底色，然后上面还有一层，是绿色，长度会随着时间变化而变化，然后就能够简单粗暴地实现进度条形式，下面的类似，就是少了一个进度值。
 
 （CSSOperate3.html）
-```HTML
+```html
 <html>
     <head>
         <title>ms-css</title>
@@ -663,7 +663,7 @@ avalon2的类名操作涉及到ms-class,ms-active,ms-hover。由于用法类似�
 
 >ms-class可以对应vm中的一个字符串属性，里面可以有空格（一个空格就是一个类名嘛）
 
-```HTML
+```html
 vm.classes = "aaa bbb ccc"
 <div ms-class="@classes"></div>
 
@@ -671,7 +671,7 @@ vm.classes = "aaa bbb ccc"
 ```
 
 我选择看一个例子：(className1.html)
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -720,7 +720,7 @@ vm.classes = "aaa bbb ccc"
 从这个例子可以看出，类能通过ms-class传入，而且能和传统的class一同使用。另外还需要注意的是代码。
 
 （className2.html)
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -776,7 +776,7 @@ vm.classes = "aaa bbb ccc"
 在这里就能看到active，hover和class的区别，前两者是在触发某个事件的时候能出现，设置该形式的样式，十分方便。
 
 （className3.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -822,7 +822,7 @@ vm.classes = "aaa bbb ccc"
 
 > ms-class、 ms-hover、 ms-active涵盖了所有与类名相应的需求，并且使用上比jQuery还简单。最后看一下用它实现斑马线的效果吧。
 
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -877,8 +877,8 @@ vm.classes = "aaa bbb ccc"
 > 本节介绍的ms-if指令与ms-visible很相似，都是让某元素“看不见”，不同的是ms-visible是通过CSS实现，ms-if是通过移除插入节点实现。
 
 （ifExist1.html）
-```HTML
-<!DOCTYPE HTML>
+```html
+<!DOCTYPE html>
 <html>
     <head>
         <title>ms-if</title>
@@ -919,7 +919,7 @@ vm.classes = "aaa bbb ccc"
 查看生成的html可知，ms-if和ms-visible的区别，两者的区别在于该dom节点是否存在。
 
 这是一个新的选项卡的实现（ifExist2.html）
-```HTML
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -966,3 +966,475 @@ vm.classes = "aaa bbb ccc"
 ```
 
 ms-for又起到了作用，需要对其使用有足够的熟悉。另一方面是ms-if，这个才是这章的重点额。
+
+## avalon2学习教程09循环操作
+> 司徒正美 2016年04月10日发布
+
+网址：[avalon2学习教程09循环操作](https://segmentfault.com/a/1190000004908426)
+
+在avalon2中，只有ms-for这一种命令，如果需要得到数组元素或者是对象键值，可以在in前面定义新变量。
+
+```html
+<div ms-for="el in @arrayOrObject">{{el}}</div>
+```
+
+这里面@arrayOrObject就是数组。
+
+如果要指定数组索引值或对象的键名，那么需要加一个小括号。
+```html
+<div ms-for="(index,el) in @arrayOrObject">{{el}}</div>
+```
+
+我们可以用limitBy, filterBy， orderBy, selectBy过滤器生成新的循环体。
+```html
+<div ms-for="(index,el) in @arrayOrObject ｜ filterBy('name')">{{el}}</div>
+```
+
+如果用limitBy过滤器，那么数组的长度或对象的大小会变小，那我们现在就不知道现在的长度，因此我们需要另一个变量引用新对象新数组
+```html
+<div ms-for="(index,el) in @arrayOrObject as newArray｜ filterBy('name')">{{el}}::{{newArray.length}}</div>
+```
+
+如果想实现之前的$fist, $last效果，那就需要用到js指令
+```html
+<div ms-for="(index,el) in @arrayOrObject  as newArray｜ filterBy('name')">
+<!--ms-js:var $first = $index === 0 -->
+<!--ms-js:var $last = $index === new Array -2 -->
+</div>
+```
+
+这里存在注释指令，实质上ms-if为false时创建的注释节点也是一种注释指令。
+
+这个以元素属性存在的ms-for指令，会翻译成以注释节点存在的ms-for指令。
+```html
+<div class='panel' ms-for="($index, el) in @array">{{el}}::{{$index}}</div>
+```
+
+等价于
+```html
+<!--ms-for:($index,el) in @array-->
+<div class='panel'>{{el}}::{{$index}}</div>
+<!--ms-for-end:-->
+```
+
+这种方式能够帮助解决循环多个元素的问题，如：
+```html
+<!--ms-for:($index,el) in @array-->
+<td>{{el.td1}}</td>
+<td>{{el.td2}}</td>
+<!--ms-for-end:-->
+```
+
+>注意，avalon2的监控数组已经移除size()方法，由于内部使用了虚拟DOM，你直接使用@array.length就能得知道当前长度了。
+
+>avalon2也没有angular的track by机制，或像React那样强制使用key.这种为优化排序性能的方法，avalon内部帮你搞定，就不需要你多写什么了。
+
+（msfor1.html）
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                array: ["aaa","bbb","ccc"]
+            })
+            setTimeout(function(){
+                 vm.array = ['ccc','dd1','dd2','dd3']
+            },3000)
+           
+
+        </script>
+    </head>
+    <body ms-controller="test">
+        <ul>
+            <li ms-for="($index, el) in @array">{{el}} --- {{$index}}</li>
+        </ul>
+    </body>
+</html>
+```
+
+这是一个很简单地实现循环的例子。当然，这种方式常用在接受后台数据并展示。这种方式似乎比runtime更加方便而且组件化，直接把内容埋在dom节点里面（个人觉得）。
+
+在有些时候，需要循环二维甚至多维数组。（msfor2.html）
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                array: [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]
+            })
+            setTimeout(function(){
+                vm.array.set(0, [13,14,15,16])
+            },3000)
+        </script>
+    </head>
+    <body ms-controller="test">
+        <table border="1">
+            <tr ms-for="($index, el) in @array">
+                <td ms-for="elem in el">{{elem}}  它位于第<b style="color:orchid">{{$index}}</b>行</td>
+            </tr>
+        </table>
+    </body>
+</html>
+```
+
+```html
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>ms-repeat</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js" ></script>
+        <script>
+
+            var definition = {
+                $id: 'test',
+                array: ['1', '2', '3', '4'],
+                removeAt: function (e) {
+                    var elem = e.target
+                    if (isFinite(elem.value)) {//this为input元素
+                        var a = ~~elem.value
+                        this.array.removeAt(a)
+                        elem.value = ''
+                    }
+                }
+            }
+            'push,unshift,remove,ensure'.replace(avalon.rword, function (method) {
+                definition[method] = function (e) {
+                    //avalon2中,所有通过ms-on-* 及其变体绑定的事件,其this都是指向vm,
+                    //而元素本身则通过e.targeta得到
+                    var elem = e.target
+                    if (elem.value) {
+                        this.array[method](elem.value)
+                        elem.value = ''
+                    }
+                }
+            })
+            'pop,shift,sort,reverse'.replace(avalon.rword, function (method) {
+                definition[method] = function (e) {
+                    this.array[method]()
+                }
+            })
+            
+            avalon.define(definition)
+
+        </script>
+    </head>
+    <body ms-controller="test">
+        <p>监控数组拥有以下方法，我们可以操作它们就能同步对应的区域</p>
+        <blockquote>
+            push, shift, unshift, pop, slice, splice, remove, removeAt, removeAll, clear,
+            ensure, pushArray, sort, reverse, set
+        </blockquote>
+        <ul>
+            <li ms-for="($index,el) in @array">数组的第{{$index+1}}个元素为{{el}}</li>
+        </ul>
+        <p>对数组进行push操作，并回车<input ms-keypress="@push | enter"></p>
+        <p>对数组进行unshift操作，并回车<input ms-keypress="@unshift | enter"></p>
+        <p>对数组进行ensure操作，并回车<input ms-keypress="@ensure | enter"><br/>
+            (只有数组不存在此元素才push进去)</p>
+        <p>对数组进行remove操作，并回车<input ms-keypress="@remove | enter"></p>
+        <p>对数组进行removeAt操作，并回车<input ms-keypress="@removeAt | enter"></p>
+        <p><button type='button' ms-click="@sort">对数组进行sort操作</button></p>
+        <p><button type='button' ms-click="@reverse">对数组进行reverse操作</button></p>
+        <p><button type='button' ms-click="@shift">对数组进行shift操作</button></p>
+        <p><button type='button' ms-click="@pop">对数组进行pop操作</button></p>
+        <p>当前数组的长度为<span style="color:red">{{@array.length}}</span>。</p>
+
+    </body>
+</html>
+```
+
+这个案例比较复杂，实现了很多对数组的操作。
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: 'for3',
+                header: ['name','age','sex'],
+                list: []
+            })
+            var sexMap = {
+                true: "男",
+                false: "女"
+            }
+            function genData(n){
+                var ret = []
+                for(var i =0 ; i< n; i++){
+                    ret.push({
+                        name: Math.random(), 
+                        age: 3+ Math.ceil((Math.random() *30)),
+                        sex: sexMap[1-Math.random() > 0.5],
+                        desc: Math.random()
+                    })
+                }
+                return ret
+            }
+           setInterval(function(){
+                var t1 = Date.now();
+                vm.list = genData(100)
+                console.log('total ' + (Date.now() - t1) + ' ms');
+            }, 70);
+        </script>
+    </head>
+    <body>
+
+        <div ms-controller='for3' >
+            <table border="1">
+                <tr><th ms-for='el in @header'>{{el}}</th></tr>
+               <tr ms-for='tr in @list'>
+                    <td ms-for='td in tr | selectBy(["name","age","sex"])' ms-attr="{align:td === 'age' ?'left':'right'}">{{td}}</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+```
+
+额，这个程序似乎是存在bug。暂时没找到解决方案。  
+问题："Uncaught DOMException: Failed to execute 'setAttribute' on 'Element': 'name\??3' is not a valid attribute name.
+    at Object.toDOM "
+
+## avalon2学习教程10事件绑定
+> 司徒正美 2016年04月12日发布
+
+网址：[avalon2学习教程10事件绑定](https://segmentfault.com/a/1190000004926503)
+
+>avalon2的事件指令，比起avalon1来强大多了。
+
+>首先其内部是使用事件代理实现的，能冒泡的事件全部绑定document上。只有旧式IE的几个事件还绑定在原元素上。
+
+>其次，this直接指向vmodel，元素节点则通过e.target获取。如果要传入多个参数，需要指定事件对象，还是与原来一样使用$event
+
+```html
+<div ms-click='@fn(111,222,$event)'>{{@ddd}}</div>
+```
+
+>再次，添加了一些专门针对事件回调的过滤器
+1. 对按键进行限制的过滤器esc，tab，enter，space，del，up，left，right，down
+2. 对事件方法stopPropagation, preventDefault进行简化的过滤器stop, prevent
+
+>最后，对事件回调进行缓存，防止重复生成。
+
+事件绑定是使用ms-on-☆绑定来实现，但avalon也提供了许多快捷方式，让用户能直接以ms-eventName调用那些常用事件，如下
+> animationend、 blur、 change、 input、 click、 dblclick、 focus、 keydown、 keypress、 keyup、 mousedown、 mouseenter、 mouseleave、 mousemove、 mouseout、 mouseover、 mouseup、 scan、 scroll、 submit
+
+avalon的事件绑定支持多投事件机制（同一个元素可以绑定N个同种事件，如ms-click=fn, ms-click-1=fn2, ms-click-2=fn3）
+
+（case1.html）
+```html
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>ms-on</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+        <script src="avalon.js" ></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                firstName: "司徒",
+                array: ["aaa", "bbb", "ccc"],
+                argsClick: function(e, a, b) {
+                    alert([].slice.call(arguments).join(" "))
+                },
+                loopClick: function(a, e) {
+                    alert(a + "  " + e.type)
+                },
+                status: "",
+                callback: function(e) {
+                    vm.status = e.type
+                },
+                field: "",
+                check: function(e) {
+                    vm.field = e.target.value + "  " + e.type
+                },
+                submit: function() {
+                    var data = vm.$model
+                    if (window.JSON) {
+                        setTimeout(function() {
+                            alert(JSON.stringify(data))
+                        })
+                    }
+                }
+            })
+
+        </script>
+    </head>
+    <body>
+        <fieldset ms-controller="test">
+            <legend>有关事件回调传参</legend>
+            <div ms-mouseenter="@callback" ms-mouseleave="@callback">{{@status}}<br/>
+                <input ms-on-input="@check"/>{{@field}}
+            </div>
+            <div ms-click="@argsClick($event, 100, @firstName)">点我</div>
+            <div ms-for="el in @array" >
+                <p ms-click="@loopClick(el, $event)">{{el}}</p>
+            </div>
+            <button ms-click="@submit" type="button">点我</button>
+        </fieldset>
+    </body>
+</html>
+```
+
+这个例子里面能看到各种事件的绑定。
+（case2.html）
+```html
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>ms-on</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+        <script src="avalon.js" ></script>
+        <script>
+            var count = 0
+            var model = avalon.define({
+                $id: "multi-click",
+                str1: "1",
+                str2: "2",
+                str3: "3",
+                click0: function() {
+                    model.str1 = "xxxxxxxxx" + (count++)
+                },
+                click1: function() {
+                    model.str2 = "xxxxxxxxx" + (count++)
+                },
+                click2: function() {
+                    model.str3 = "xxxxxxxxx" + (count++)
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <fieldset>
+            <legend>一个元素绑定多个同种事件的回调</legend>
+            <div ms-controller="multi-click">
+                <div ms-click="@click0" ms-click-1="@click1" ms-click-2="@click2" >请点我</div>
+                <div>{{@str1}}</div>
+                <div>{{@str2}}</div>
+                <div>{{@str3}}</div>
+            </div>
+        </fieldset>
+    </body>
+</html>
+```
+
+从这个案例可以看到多个事件绑定的方式。
+
+```html
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>ms-on</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+        <script src="avalon.js" ></script>
+        <script>
+            avalon.define({
+                $id: "xxx",
+                fn: function() {
+                    console.log("11111111")
+                },
+                fn1: function() {
+                    console.log("2222222")
+                },
+                fn2: function() {
+                    console.log("3333333")
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <div ms-controller="xxx" 
+             ms-on-mouseenter-3="@fn"
+             ms-on-mouseenter-2="@fn1"
+             ms-on-mouseenter-1="@fn2"
+             style="width:100px;height:100px;background: red;"
+             >
+        </div>
+    </body>
+</html>
+```
+
+从这个案例能知道，其标号"-x"无所谓。
+
+（case4.html）
+```html
+<!DOCTYPE html> <html>
+    <head>
+        <title>ms-mouseenter, ms-mouseleave</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+        <script src="avalon.js"></script>
+        <script>
+            avalon.define({
+                $id: "test",
+                fn1: function(e) {
+                    console.log(e.type)
+                    console.log(e.target)
+                },
+                fn2: function(e) {
+                    console.log(e.type)
+                    console.log(e.target)
+                }
+            })
+        </script>
+    </head>
+
+    <body ms-controller="test">
+        <div ms-mouseenter="@fn1" ms-mouseleave="@fn2" style="background: red;width:200px;height: 200px;padding:20px;">
+            <div style="background: blue;width:160px;height: 160px;margin:20px;"></div>
+        </div>
+    </body>
+</html>
+```
+
+好好看看e是啥，e.target和e.type又是啥。
+
+（case5.html）
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ms-on-mousewheel</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+        <script src="avalon.js"></script>
+        <script>
+            var vm = avalon.define({
+                $id: "test",
+                text: "",
+                callback: function(e) {
+                    vm.text = e.wheelDelta + "  " + e.type
+                }
+            })
+
+        </script>
+    </head>
+
+    <body ms-controller="test">
+        <div ms-on-mousewheel="@callback" id="aaa" style="background: red;width:200px;height: 200px;">
+            {{@text}}
+        </div>
+    </body>
+</html>
+```
+关于滚轮时间，兼容性实现的比较难（火狐orz）。通过正负来实现。
+
+> 此外avalon还对input，animationend事件进行修复，大家也可以直接用avalon.bind, avalon.fn.bind来绑定这些事件。但建议都用ms-on绑定来处理。
