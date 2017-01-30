@@ -28,4 +28,3 @@ API文档：[avalon2——迷你、易用、高性能的前端MVVM框架](http:/
 
 参考文献：
 教程：[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
-
