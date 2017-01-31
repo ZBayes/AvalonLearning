@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="avalon.js"></script>
+        <script src="jquery-3.1.1.js"></script>
+        <style>
+            .ani{
+               width:100px;
+               height:100px;
+               background: #29b6f6;
+            }
+        </style>
+        <script>
+            avalon.effect('animate', {
+               enter: function(el, done){
+                   $(el).animate({width: 300},1000,done)
+               },
+               leave: function(el, done){
+                   $(el).animate({width: 100},1000,done)
+               }
+            })
+            var vm = avalon.define({
+                $id: 'effect',
+                aaa: "test",
+                action: 'enter',
+                enterCb: function(){
+                    avalon.log('动画完成')
+                },
+                leaveCb: function(){
+                    avalon.log('动画回到原点')
+                }
+            })
+           
+          
+        </script>
+    </head>
+    <body>
+        <div ms-controller='effect' >
+            <div class='ani' ms-effect="{is:'animate', action:@action,onEnterDone: @enterCb,onLeaveDone: @leaveCb}">
+                {{@aaa}}
+            </div>
+            <button ms-click='@action = @action !== "leave" ? "leave": "enter"'
+                    type="button">click</button>
+        </div>
+    </body>
+</html>

@@ -44,7 +44,7 @@
 ```
 
 结合教程和代码，大概说说个人的理解。  
-```JavaScript
+```javascript
 var vm = avalon.define({
     $id: "test",
     a: 111
@@ -90,7 +90,7 @@ var vm = avalon.define({
 >- $render， 灵感来自react的render方法，用于生成对应的虚拟DOM树
 >- $accessors， 储存所有监控属性的定义，这在avalon.modern及avalon.next不存在，avalon.modern可以通过 Object.getOwnPropertyDescriptor得到访问器属性的定义，而avalon.next是使用Proxy实现vm，完全没有这方面的必要。
 
-```JavaScript
+```javascript
 var vm = avalon.define({
     $id: 'test',
     a: 11,
@@ -104,7 +104,7 @@ console.log(vm)
 ```
 
 当然，vm里面也能埋vm对象，最外层的vmm称为**顶层vm**，内层的则称为**子vm**。  
-```JavaScript
+```javascript
 var vm = avalon.define({
     $id: 'test',
     a: 11,
@@ -118,7 +118,7 @@ console.log(vm.b)
 
 > vm.b就是一个子vm，它与顶层vm有些区别，首先其$id为顶层vm的$id加上其属性名构成， 即"test.b"。它少了一些系统属性，如$element, $render, $watch, $fire, $events(这个在avalon.next存在)，可以说是一个轻量的vm。它的数据发生改动时，它不会自己处理$watch回调，而是交由顶层的vm来处理，因为所有回调都放在顶层vm的$events上。
 
-```JavaScript
+```javascript
 var vm = avalon.define({
    $id: 'test',
     a: 11,
@@ -131,7 +131,7 @@ console.log(vm.arr)
 > 如果监控数组的每个元素是一个对象，那么它们会转换为顶层vm, 由masterFactory生成，它们的$id名都叫做test.arr.*。
 
 在avalon2中还提供了合并vm的方法。（easy_example\multi_vm.html）
-```JavaScript
+```javascript
 <!DOCTYPE html>
 <html>
     <head>
@@ -289,7 +289,7 @@ ms-html具有一些比较厉害的特性，就是允许里面输入html样式，
 
 数据填充是传统静态模板的最基础功能。因此你在混用avalon与其他后端模板时，会出现冲突，大家都使用 {{}}做界定符。这时我们可以使用以下方式配置界定符，注意，这个脚本也在放在head前面，或保证你在扫描前运行它。
 
-```JavaScript
+```javascript
 avalon.config({
    interpolate:["{%","%}"]
 })
@@ -2048,7 +2048,7 @@ template是HTML5添加的标签，它在IE9－11中不认，但也能正确解�
         <title>ms-validate</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
-        <script src="../dist/avalon.js"></script>
+        <script src="avalon.js"></script>
         <script>
             var vm = avalon.define({
                 $id: 'test',
@@ -2200,4 +2200,419 @@ avalon.component('ms-button', {
         </div>
     </body>
 </html>
+```
+
+## avalon2学习教程14动画使用
+> 司徒正美 2016年04月19日发布
+
+网址：[avalon2学习教程14动画使用](https://segmentfault.com/a/1190000004968937)
+
+avalon2实际上没有实现完整的动画模块，它只是对现有的CSS3动画或jquery animate再包装一层。
+
+### CSS为avalon实现动画效果
+```javascript
+avalon.effect(name, definition)
+```
+
+css3动画要求我们至少添加4个类名。这个是从angular那里学过来的。因此如何你以前的项目是基于angular，它那些CSS动画类可以原封不动地搬过来用。
+```javascript
+avalon.effect('animate', {
+    enterClass: 'animate-enter',
+    enterActiveClass: 'animate-enter-active',
+    leaveClass: 'animate-leave',
+    leaveActiveClass: 'animate-leave-active', 
+})
+```
+
+类名在内部是可以自动添加，具体的实现方式如下：
+```javascript
+avalon.effect = function (name, definition) {
+    avalon.effects[name] = definition
+    if (support.css) {
+        if (!definition.enterClass) {
+            definition.enterClass = name + '-enter'
+        }
+        if (!definition.enterActiveClass) {
+            definition.enterActiveClass = definition.enterClass + '-active'
+        }
+        if (!definition.leaveClass) {
+            definition.leaveClass = name + '-leave'
+        }
+        if (!definition.leaveActiveClass) {
+            definition.leaveActiveClass = definition.leaveClass + '-active'
+        }
+
+    }
+    if (!definition.action) {
+        definition.action = 'enter'
+    }
+}
+```
+
+于是简化为：
+```html
+avalon.effect('animate', {})
+```
+
+注册之后，还需要在样式表里面需要加这个：
+```html
+<style>
+    .animate-enter, .animate-leave{
+        width:100px;
+        height:100px;
+        background: #29b6f6;
+        transition: width 2s;
+        -moz-transition: width 2s; /* Firefox 4 */
+        -webkit-transition: width 2s; /* Safari 和 Chrome */
+        -o-transition: width 2s; /* Opera */
+    }  
+    .animate-enter-active, .animate-leave{
+        width:300px;
+    }
+    .animate-leave-active{
+        width:100px;
+    }
+</style>
+```
+
+我们还得单独定义一个vm，里面指明动画的动作（默认有三种方式, enter, leave, move）及动画结束时的回调（这是可选的）
+```javascript
+var vm = avalon.define({
+    $id: 'effect',
+    aaa: "test",
+    action: 'enter',
+    enterCb: function(){
+        avalon.log('动画完成')
+    },
+    leaveCb: function(){
+        avalon.log('动画回到原点')
+    }
+})
+```
+
+然后在页面上这样使用：
+```html
+<div ms-controller='effect' >
+    <div ms-effect="{is:'animate', action:@action,onEnterDone: @enterCb,onLeaveDone: @leaveCb}">
+        {{@aaa}}
+    </div>
+    <button ms-click='@action = @action !== "leave" ? "leave": "enter"'
+            type="button">click</button>
+</div>
+```
+
+ms-effect的值为一个对象，其中is是必选。除了action, 还支持这么多种回调：
+> onEnterDone, onLeaveDone, onEnterAbort, onLeaveAbort, onBeforeEnter, onBeforeLeave
+
+例子，下面这个是用js实现的（animate1.html）。
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="avalon.js"></script>
+        <script src="jquery-3.1.1.js"></script>
+        <style>
+            .ani{
+               width:100px;
+               height:100px;
+               background: #29b6f6;
+            }
+        </style>
+        <script>
+            avalon.effect('animate', {
+               enter: function(el, done){
+                   $(el).animate({width: 300},1000,done)
+               },
+               leave: function(el, done){
+                   $(el).animate({width: 100},1000,done)
+               }
+            })
+            var vm = avalon.define({
+                $id: 'effect',
+                aaa: "test",
+                action: 'enter',
+                enterCb: function(){
+                    avalon.log('动画完成')
+                },
+                leaveCb: function(){
+                    avalon.log('动画回到原点')
+                }
+            })
+           
+          
+        </script>
+    </head>
+    <body>
+        <div ms-controller='effect' >
+            <div class='ani' ms-effect="{is:'animate', action:@action,onEnterDone: @enterCb,onLeaveDone: @leaveCb}">
+                {{@aaa}}
+            </div>
+            <button ms-click='@action = @action !== "leave" ? "leave": "enter"'
+                    type="button">click</button>
+        </div>
+    </body>
+</html>
+```
+
+需要查看整个设计流程，了解清楚后即可使用。
+
+CSS3位置效果。
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="avalon.js"></script>
+        <script src="jquery-3.1.1.js"></script>
+        <style>
+           .ani{
+                width:100px;
+                height:100px;
+                background: #ff6e6e;
+            }
+            .wave-enter, .wave-leave {
+                -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+                -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+                -o-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+                transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+            }
+
+            .wave-enter {
+                position:absolute;
+                left:45%;
+            }
+
+            .wave-enter-active {
+                left:0;
+            }
+
+            .wave-leave {
+                position:absolute;
+                left:0;
+            }
+
+            .wave-leave-active {
+                left:45%;
+            }
+
+        </style>
+        <script>
+            avalon.effect('wave', {})
+            var vm = avalon.define({
+                $id: 'effect',
+                action: 'enter',
+                enterCb: function () {
+                    avalon.log('动画完成')
+                },
+                leaveCb: function () {
+                    avalon.log('动画回到原点')
+                }
+            })
+
+
+        </script>
+    </head>
+    <body>
+        <div ms-controller='effect' >
+            <div class='ani' ms-effect="{is:'wave', action:@action,onEnterDone: @enterCb,onLeaveDone: @leaveCb}">
+                <button ms-click='@action = @action !== "leave" ? "leave": "enter"'
+                        type="button">click</button>
+            </div>
+
+        </div>
+    </body>
+</html>
+```
+
+注意其中的命名和实现方式。
+
+ms-widget+ms-for+ms-if+ms-effect的组合动画效果！（animate3.html）
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ms-if</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script src="jquery-3.1.1.js"></script>
+        <style>
+            .ani{
+                width:100px;
+                height:100px;
+                background: #ff6e6e;
+            }
+        </style>
+        <script >
+            avalon.component('ms-button', {
+                template: '<button type="button"><span><slot name="buttonText"></slot></span></button>',
+                defaults: {
+                    buttonText: "button"
+                },
+                soleSlot: 'buttonText'
+            })
+            avalon.effect('zoom', {
+                enter: function (el, done) {
+
+                    $(el).css({width: 0, height: 0}).animate({
+                        width: 100, height: 100
+                    }, 1000, done)
+                },
+                leave: function (el, done) {
+                    $(el).animate({
+                        width: 0, height: 0
+                    }, 1000, done)
+                }
+            })
+            var vm = avalon.define({
+                $id: "test",
+                arr: [1,2,3],
+                aaa: 222,
+                toggle: true
+            })
+
+        </script>
+
+    </head>
+    <body ms-controller="test" >
+        <div ms-for="el in @arr">
+        <div class='ani' 
+             ms-attr="{eee:el}" 
+             ms-if="@toggle" 
+             ms-widget='{is:"ms-button"}' 
+             ms-effect="{is:'zoom'}">{{@aaa}}::{{el}}</div>
+        </div>
+    </body>
+</html>
+```
+
+额，这个程序似乎是存在bug。暂时没找到解决方案。  
+问题："Uncaught DOMException: Failed to execute 'setAttribute' on 'Element': 'name\??3' is not a valid attribute name.
+    at Object.toDOM "
+
+最后看一下ms-for与stagger的动画效果。这次为了与angular一次，stagger应该为一个小数，它会让当前元素延迟stagger秒执行。（animate4.html）
+```html
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="avalon.js"></script>
+    <style>
+        .my-repeat-animation {
+            width: 400px;
+            height: 30px;
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+        }
+         
+        .ng-enter {
+            -webkit-animation-name: enter_animation;
+            animation-name: enter_animation;
+        }
+        .ng-enter-stagger {
+           animation-delay:300ms;
+           -webkit-animation-delay:300ms;
+        }
+        .ng-leave {
+            -webkit-animation-name: leave_animation;
+            animation-name: leave_animation;
+        }
+         
+        @keyframes enter_animation {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+         
+        @keyframes leave_animation {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+         
+        @-webkit-keyframes enter_animation {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+         
+        @-webkit-keyframes leave_animation {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <script>
+        avalon.effect("my-repeat-animation", {
+            enterClass: "ng-enter",
+            leaveClass: "ng-leave"
+        })
+        var vm = avalon.define({
+            $id: "test",
+            array: [1, 2, 3, 4],
+            getBg: function() {
+                return '#' + Math.floor(Math.random() * 16777215).toString(16);
+            },
+            add: function() {
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+                vm.array.push(vm.array.length + 1)
+            },
+            value: ""
+        })
+        vm.$watch("value", function(a) {
+            if (a) {
+                vm.array.removeAll(function(el) {
+                    return el !== a
+                })
+            } else {
+                if(vm.array.length < 12)
+                  vm.add()
+            }
+        })
+    </script>
+</head>
+ 
+<body ms-controller="test">
+    <button ms-click="@add">Add</button>
+    <input placeholder="只保留" ms-duplex-number="@value" />
+    <div class="my-repeat-animation"  ms-for="item in @array" 
+         ms-css="{background:@getBg()}"
+         ms-effect="{is:'my-repeat-animation',stagger:0.3}">
+        {{item}}
+    </div>
+</body>
+ 
+</html>
+
+```
+
+目前，avalon的ms-effect可以与ms-visible,ms-if,ms-repeat连用。ms-effect也可以单独或与其他指令使用，这时需要你指定action。
+```html
+<div ms-effect="{is:"effectName", action: @action}">
 ```

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ms-if</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js"></script>
+        <script src="jquery-3.1.1.js"></script>
+        <style>
+            .ani{
+                width:100px;
+                height:100px;
+                background: #ff6e6e;
+            }
+        </style>
+        <script >
+            avalon.component('ms-button', {
+                template: '<button type="button"><span><slot name="buttonText"></slot></span></button>',
+                defaults: {
+                    buttonText: "button"
+                },
+                soleSlot: 'buttonText'
+            })
+            avalon.effect('zoom', {
+                enter: function (el, done) {
+
+                    $(el).css({width: 0, height: 0}).animate({
+                        width: 100, height: 100
+                    }, 1000, done)
+                },
+                leave: function (el, done) {
+                    $(el).animate({
+                        width: 0, height: 0
+                    }, 1000, done)
+                }
+            })
+            var vm = avalon.define({
+                $id: "test",
+                arr: [1,2,3],
+                aaa: 222,
+                toggle: true
+            })
+
+        </script>
+
+    </head>
+    <body ms-controller="test" >
+        <div ms-for="el in @arr">
+        <div class='ani' 
+             ms-attr="{eee:el}" 
+             ms-if="@toggle" 
+             ms-widget='{is:"ms-button"}' 
+             ms-effect="{is:'zoom'}">{{@aaa}}::{{el}}</div>
+        </div>
+    </body>
+</html>
