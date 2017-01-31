@@ -1,4 +1,7 @@
-# 司徒正美Avalon教程**的笔记**-From 简书
+# 司徒正美Avalon教程**的笔记**-基础部分
+From 简书
+
+##
 暂时没有摘要
 
 [TOC]
@@ -818,7 +821,7 @@ vm.classes = "aaa bbb ccc"
 
 通过条件表达式可以控制样式根据条件变化。大概的几层关系我也简单的搞了一下：
 
-![className1.png](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/couseOL/pic/className1.png)
+![className1.png](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/basic-couseOL/pic/className1.png)
 
 > ms-class、 ms-hover、 ms-active涵盖了所有与类名相应的需求，并且使用上比jQuery还简单。最后看一下用它实现斑马线的效果吧。
 
@@ -2616,3 +2619,74 @@ ms-widget+ms-for+ms-if+ms-effect的组合动画效果！（animate3.html）
 ```html
 <div ms-effect="{is:"effectName", action: @action}">
 ```
+
+## avalon2学习教程15指令总结
+> 司徒正美 2016年04月19日发布
+
+网址：[avalon2学习教程15指令总结](https://segmentfault.com/a/1190000004969319)
+
+关于指令，总结起来就这张图：
+![order_all.png](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/basic-couseOL/pic/order_all.png)
+
+另外，香自定义指令的时候，可以使用avalon.directive方法第一个为指令名，第二个是定义体，里面至少有parse, diff, update三个方法。自己参看css指令，编写指令吧。
+```javascript
+//css指令
+
+var update = require('./_update')
+
+avalon.directive('css', {
+    parse: function(cur, pre, binding) {
+       cur[binding.name] = avalon.parseExpr(binding)
+    },
+    diff: function (copy, src, name) {
+        var a = copy[name]
+        var p = src[name]
+        if (Object(a) === a) {
+            
+            a = a.$model || a//安全的遍历VBscript
+            if (Array.isArray(a)) {//转换成对象
+                a = avalon.mix.apply({}, a)
+            }
+            if (typeof p !== 'object') {//如果一开始为空
+                src.changeStyle = src[name] = a
+            } else {
+                var patch = {}
+                var hasChange = false
+                for (var i in a) {//diff差异点
+                    if (a[i] !== p[i]) {
+                        hasChange = true
+                        patch[i] = a[i]
+                    }
+                }
+                if (hasChange) {
+                    src[name] = a
+                    src.changeStyle = patch
+                }
+            }
+            if (src.changeStyle) {
+                update(src, this.update)
+            }
+        }
+        delete copy[name]//释放内存
+    },
+    update: function (dom, vdom) {
+        var change = vdom.changeStyle
+        var wrap = avalon(dom)
+        for (var name in change) {
+            wrap.css(name, change[name])
+        }
+        delete vdom.changeStyle
+    }
+})
+```
+
+里面的parse(cur, pre, binding)方法是用于创建虚拟DOM， cur是通过vm.$render方法生成的新虚拟节点，pre是之前的虚拟节点，binding是当前指令抽象生成的绑定对象。
+
+里面的diff(copy, src, name)方法是用来比较前后两个虚拟DOM。copy是新虚拟节点，src是之前的虚拟DOM，name为指令的名字。当你用各种方式比较出这两个虚拟DOM有差异，那你就可以使用require('./_update')这个方法执行更新，更新方式为指令的update方法。
+
+>2.1.0后，刷新机制有点改动，两个节点比较出差异后立即更新真实DOM。
+
+不像过去那样全部比较再全量更新。
+里面的update(dom,vnode,parent)方法是用来更新真实元素的。
+
+最后你可以在avalon.directives对象中指到所有指令的定义。你也可以在vm.$element.vtree中看到你生成的虚拟DOM树。
