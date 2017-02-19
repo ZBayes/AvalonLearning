@@ -477,3 +477,9 @@ page.html改成：
 报错：
 ![popwinError1](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/modules-couseOL/pic/popwinError1.png)
 ![popwinError2](https://raw.githubusercontent.com/ZBayes/AvalonLearning/master/modules-couseOL/pic/popwinError2.png)
+
+## 一步步编写avalon组件02：分页组件
+> 司徒正美 2016年06月28日发布
+
+网址：[一步步编写avalon组件02：分页组件](https://segmentfault.com/a/1190000005820855)
+

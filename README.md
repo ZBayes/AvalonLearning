@@ -37,3 +37,10 @@ Notes on Avalon Learning
 
 参考文献：
 教程：[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
+
+2017-2-19
+- 新增：司徒正美老师在简书上的组件笔记，目前只看了弹层组件。
+- 新增：bug，暂未解决，已经写在笔记里面待解决。
+
+参考文献：
+教程：[司徒正美的文章](https://segmentfault.com/u/situzhengmei/articles?page=1)
